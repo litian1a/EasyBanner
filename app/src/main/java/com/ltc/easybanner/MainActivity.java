@@ -16,10 +16,10 @@ public class MainActivity extends AppCompatActivity implements  EasyBanner.Banne
         setContentView(R.layout.activity_main);
         EasyBanner banner = (EasyBanner) findViewById(R.id.banner);
         int[] ints = {R.mipmap.ima1, R.mipmap.ima2, R.mipmap.ima3};
-        banner.setImaForId(ints);
+        banner.setImaForId(ints);//从本地区图片源
         //String[] strings={"http://imgbbs.heiguang.net/forum/201510/06/104432cjc7c8tx7xxqqkgq.jpg","http://imgbbs.heiguang.net/forum/201510/06/104432cjc7c8tx7xxqqkgq.jpg","http://imgbbs.heiguang.net/forum/201510/06/104432cjc7c8tx7xxqqkgq.jpg","http://imgbbs.heiguang.net/forum/201510/06/104432cjc7c8tx7xxqqkgq.jpg"};
-        //banner.setImaForUrl(strings);
-        banner.setDelayTime(1000);
+       // banner.setImaForUrl(strings);
+        banner.setDelayTime(1000);//轮播速度
 
         banner.setItemClickListener(this);
     }
