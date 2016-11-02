@@ -9,6 +9,6 @@
 
     <com.ltc.banner.EasyBanner
         android:layout_width="match_parent"
-        android:layout_height="160dp"
+        android:layout_height="260dp"
         android:id="@+id/banner"/>
 </RelativeLayout>

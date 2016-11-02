@@ -35,10 +35,8 @@ public class EasyBanner extends FrameLayout implements ViewPager.OnPageChangeLis
     private RadioGroup mRadioBar;
     private int mImaCount;
     private RadioButton[] mNavigationViews;
-    private int mCurrentItem=1;
+    private int mCurrentItem = 1;
     private boolean isScrolling;
-
-
 
 
     private BannerItemClick mItemClickListener;
@@ -96,37 +94,35 @@ public class EasyBanner extends FrameLayout implements ViewPager.OnPageChangeLis
                 String url;
                 if (i == 0) {
                     url = imaUrls[mImaCount - 1];
-                }
-                else if (i == imageViews.length-1)
+                } else if (i == imageViews.length - 1)
                     url = imaUrls[0];
                 else
                     url = imaUrls[i - 1];
 
                 Glide.with(getContext()).load(url).into(imageView);
-                imageView.setTag(R.id.tag,url);
-
+                imageView.setTag(R.id.tag, url);
 
 
             } else {
                 int id;
                 if (i == 0)
-                    id=imageIds[mImaCount - 1];
-                else if (i == imageViews.length-1)
-                    id=imageIds[0];
+                    id = imageIds[mImaCount - 1];
+                else if (i == imageViews.length - 1)
+                    id = imageIds[0];
                 else
-                    id=imageIds[i - 1];
+                    id = imageIds[i - 1];
 
                 imageView.setImageResource(id);
-                imageView.setTag(R.id.tag,id);
+                imageView.setTag(R.id.tag, id);
 
             }
-
 
             imageViews[i] = imageView;
 
         }
 
     }
+
     /**
      * 获得图片的url
      *
@@ -144,12 +140,14 @@ public class EasyBanner extends FrameLayout implements ViewPager.OnPageChangeLis
 
     /**
      * 外部传入adapter实现复杂布局
+     *
      * @param adapter
      */
-    public void customAdapter(PagerAdapter adapter){
+    public void customAdapter(PagerAdapter adapter) {
 
 
     }
+
     /**
      * 获得图片的本地id
      *
@@ -167,11 +165,13 @@ public class EasyBanner extends FrameLayout implements ViewPager.OnPageChangeLis
 
     /**
      * 图片点击事件
+     *
      * @param itemClickListener
      */
     public void setItemClickListener(BannerItemClick itemClickListener) {
         mItemClickListener = itemClickListener;
     }
+
     private void init() {
         //左右加两缓存 无限轮播
         imageViews = new View[mImaCount + 2];
@@ -192,7 +192,6 @@ public class EasyBanner extends FrameLayout implements ViewPager.OnPageChangeLis
                 if (!isScrolling) {
                     if (mImaCount <= 0)
                         return;
-
                     mPager.setCurrentItem(mCurrentItem % (mImaCount + 2));
                     mCurrentItem++;
                 }
@@ -249,7 +248,7 @@ public class EasyBanner extends FrameLayout implements ViewPager.OnPageChangeLis
     @Override
     public void onPageSelected(int position) {
         for (int i = 0; i < mNavigationViews.length; i++) {
-            mNavigationViews[i].setSelected(i == position-1);
+            mNavigationViews[i].setSelected(i == position - 1);
         }
     }
 
@@ -257,13 +256,13 @@ public class EasyBanner extends FrameLayout implements ViewPager.OnPageChangeLis
     public void onPageScrollStateChanged(int state) {
         switch (state) {
             case ViewPager.SCROLL_STATE_DRAGGING: //滑动中
-                isScrolling=true;
+                isScrolling = true;
                 break;
             case ViewPager.SCROLL_STATE_SETTLING:   //手指从屏幕抬起来
-                isScrolling=true;
+                isScrolling = true;
                 break;
             case ViewPager.SCROLL_STATE_IDLE:  //滑动完全结束
-                isScrolling=false;
+                isScrolling = false;
                 //实现无限轮播 左右两边缓存
                 if (mPager.getCurrentItem() == 0) {
                     mPager.setCurrentItem(mImaCount, false);
@@ -312,7 +311,8 @@ public class EasyBanner extends FrameLayout implements ViewPager.OnPageChangeLis
             container.removeView(imageViews[position]);
         }
     }
-    public interface BannerItemClick{
-      void  OnBannerItemClick(Object o);
-     }
+
+    public interface BannerItemClick {
+        void OnBannerItemClick(Object o);
+    }
 }
