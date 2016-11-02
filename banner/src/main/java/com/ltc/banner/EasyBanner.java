@@ -28,14 +28,20 @@ import com.bumptech.glide.Glide;
 public class EasyBanner extends FrameLayout implements ViewPager.OnPageChangeListener {
     private static final String TAG = "EasyBanner";
     private int delayTime = 5000;//轮播间隔时间
-    private ViewPager mPager;//内部viewpager
+    private ViewPager mPager;
     private String[] imaUrls;
     private int[] imageIds;
     private View[] imageViews;
     private RadioGroup mRadioBar;
     private int mImaCount;
     private RadioButton[] mNavigationViews;
-    private int mCurrentItem;
+    private int mCurrentItem=1;
+    private boolean isScrolling;
+
+
+
+
+    private BannerItemClick mItemClickListener;
     private Handler mHandler = new Handler();
 
     public EasyBanner(Context context, AttributeSet attrs, int defStyleAttr) {
@@ -87,30 +93,40 @@ public class EasyBanner extends FrameLayout implements ViewPager.OnPageChangeLis
 
             //判断图片数据来自网络还是来自本地
             if (imaUrls != null) {
-                if (i == 0)
-                    Glide.with(getContext()).load(imaUrls[mImaCount - 1]).into(imageView);
+                String url;
+                if (i == 0) {
+                    url = imaUrls[mImaCount - 1];
+                }
                 else if (i == imageViews.length-1)
-                    Glide.with(getContext()).load(imaUrls[0]).into(imageView);
+                    url = imaUrls[0];
                 else
-                    Glide.with(getContext()).load(imaUrls[i - 1]).into(imageView);
+                    url = imaUrls[i - 1];
+
+                Glide.with(getContext()).load(url).into(imageView);
+                imageView.setTag(R.id.tag,url);
+
+
 
             } else {
+                int id;
                 if (i == 0)
-                    imageView.setImageResource(imageIds[mImaCount - 1]);
+                    id=imageIds[mImaCount - 1];
                 else if (i == imageViews.length-1)
-                    imageView.setImageResource(imageIds[0]);
+                    id=imageIds[0];
                 else
-                    imageView.setImageResource(imageIds[i - 1]);
+                    id=imageIds[i - 1];
+
+                imageView.setImageResource(id);
+                imageView.setTag(R.id.tag,id);
+
             }
 
 
             imageViews[i] = imageView;
-            Log.i(TAG, "initImageViews: "+imageViews[i]);
 
         }
 
     }
-
     /**
      * 获得图片的url
      *
@@ -127,6 +143,14 @@ public class EasyBanner extends FrameLayout implements ViewPager.OnPageChangeLis
     }
 
     /**
+     * 外部传入adapter实现复杂布局
+     * @param adapter
+     */
+    public void customAdapter(PagerAdapter adapter){
+
+
+    }
+    /**
      * 获得图片的本地id
      *
      * @param urls
@@ -141,6 +165,13 @@ public class EasyBanner extends FrameLayout implements ViewPager.OnPageChangeLis
 
     }
 
+    /**
+     * 图片点击事件
+     * @param itemClickListener
+     */
+    public void setItemClickListener(BannerItemClick itemClickListener) {
+        mItemClickListener = itemClickListener;
+    }
     private void init() {
         //左右加两缓存 无限轮播
         imageViews = new View[mImaCount + 2];
@@ -158,12 +189,15 @@ public class EasyBanner extends FrameLayout implements ViewPager.OnPageChangeLis
         mHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                if (mImaCount <= 0)
-                    return;
+                if (!isScrolling) {
+                    if (mImaCount <= 0)
+                        return;
 
-                mPager.setCurrentItem(mCurrentItem % (mImaCount+2));
-                mCurrentItem++;
+                    mPager.setCurrentItem(mCurrentItem % (mImaCount + 2));
+                    mCurrentItem++;
+                }
                 startLoop();
+
             }
         }, delayTime);
     }
@@ -223,17 +257,22 @@ public class EasyBanner extends FrameLayout implements ViewPager.OnPageChangeLis
     public void onPageScrollStateChanged(int state) {
         switch (state) {
             case ViewPager.SCROLL_STATE_DRAGGING: //滑动中
+                isScrolling=true;
                 break;
             case ViewPager.SCROLL_STATE_SETTLING:   //手指从屏幕抬起来
-
+                isScrolling=true;
                 break;
             case ViewPager.SCROLL_STATE_IDLE:  //滑动完全结束
+                isScrolling=false;
+                //实现无限轮播 左右两边缓存
                 if (mPager.getCurrentItem() == 0) {
                     mPager.setCurrentItem(mImaCount, false);
                 } else if (mPager.getCurrentItem() == mImaCount + 1) {
                     mPager.setCurrentItem(1, false);
                 }
+
                 mCurrentItem = mPager.getCurrentItem();
+
 
                 break;
         }
@@ -255,6 +294,15 @@ public class EasyBanner extends FrameLayout implements ViewPager.OnPageChangeLis
 
         @Override
         public Object instantiateItem(ViewGroup container, int position) {
+            //设置点击事件
+            if (mItemClickListener != null) {
+                imageViews[position].setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mItemClickListener.OnBannerItemClick(v.getTag(R.id.tag));
+                    }
+                });
+            }
             container.addView(imageViews[position]);
             return imageViews[position];
         }
@@ -264,5 +312,7 @@ public class EasyBanner extends FrameLayout implements ViewPager.OnPageChangeLis
             container.removeView(imageViews[position]);
         }
     }
-
+    public interface BannerItemClick{
+      void  OnBannerItemClick(Object o);
+     }
 }
