@@ -242,7 +242,12 @@ public class EasyBanner extends FrameLayout implements ViewPager.OnPageChangeLis
 
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+        if (mPager.getCurrentItem() == 0) {
+            mNavigationViews[mImaCount-1].setSelected(true);
+        } else if (mPager.getCurrentItem() == mImaCount + 1) {
+            mNavigationViews[0].setSelected(true);
 
+        }
     }
 
     @Override
@@ -254,6 +259,7 @@ public class EasyBanner extends FrameLayout implements ViewPager.OnPageChangeLis
 
     @Override
     public void onPageScrollStateChanged(int state) {
+
         switch (state) {
             case ViewPager.SCROLL_STATE_DRAGGING: //滑动中
                 isScrolling = true;
