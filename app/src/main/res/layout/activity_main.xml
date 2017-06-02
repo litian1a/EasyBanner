@@ -6,9 +6,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.ltc.easybanner.MainActivity">
+<ListView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/main_list"
+   />
 
-    <com.ltc.banner.EasyBanner
-        android:layout_width="match_parent"
-        android:layout_height="260dp"
-        android:id="@+id/banner"/>
 </RelativeLayout>

@@ -40,7 +40,6 @@ public class EasyBanner extends FrameLayout implements ViewPager.OnPageChangeLis
 
 
     private BannerItemClick mItemClickListener;
-    private Handler mHandler = new Handler();
 
     public EasyBanner(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
@@ -186,7 +185,7 @@ public class EasyBanner extends FrameLayout implements ViewPager.OnPageChangeLis
     }
 
     private void startLoop() {
-        mHandler.postDelayed(new Runnable() {
+       postDelayed(new Runnable() {
             @Override
             public void run() {
                 if (!isScrolling) {
